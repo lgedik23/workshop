@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: Arial; margin: 20px; }
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 8px 12px;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab.active {
+  background: #0078d4;
+  color: white;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.search {
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="filterDay('Tag 1', this)">Tag 1</div>
+  <div class="tab" onclick="filterDay('Tag 2', this)">Tag 2</div>
+  <div class="tab" onclick="filterDay('Tag 3', this)">Tag 3</div>
+  <div class="tab" onclick="filterDay('Tag 4', this)">Tag 4</div>
+  <div class="tab" onclick="filterDay('Tag 5', this)">Tag 5</div>
+</div>
+
+<input class="search" type="text" placeholder="Suche..." onkeyup="searchItems(this.value)">
+
+<div id="list"></div>
+
+<script>
+const data = [
+  { day: "Tag 1", title: "Session A", desc: "Einführung" },
+  { day: "Tag 1", title: "Session B", desc: "Basics" },
+  { day: "Tag 2", title: "Session C", desc: "Advanced" },
+  { day: "Tag 3", title: "Session D", desc: "Workshop" },
+  { day: "Tag 4", title: "Session E", desc: "Deep Dive" },
+  { day: "Tag 5", title: "Session F", desc: "Wrap-up" }
+];
+
+let currentDay = "Tag 1";
+
+function render(items) {
+  const container = document.getElementById("list");
+  container.innerHTML = "";
+
+  if (items.length === 0) {
+    container.innerHTML = "<p>Keine Ergebnisse</p>";
+    return;
+  }
+
+  items.forEach(item => {
+    container.innerHTML += `
+      <div class="card">
+        <h4>${item.title}</h4>
+        <p>${item.desc}</p>
+      </div>
+    `;
+  });
+}
+
+function filterDay(day, element) {
+  currentDay = day;
+
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  element.classList.add("active");
+
+  const filtered = data.filter(x => x.day === day);
+  render(filtered);
+}
+
+function searchItems(term) {
+  const filtered = data.filter(x =>
+    x.day === currentDay &&
+    x.title.toLowerCase().includes(term.toLowerCase())
+  );
+  render(filtered);
+}
+
+filterDay("Tag 1", document.querySelector(".tab"));
+</script>
+
+</body>
+</html>
